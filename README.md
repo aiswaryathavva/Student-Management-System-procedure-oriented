@@ -45,13 +45,13 @@ student-management-system/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/aiswaryathavva/Student-Management-System-procedure-oriented.git
+git clone https://github.com/aiswaryathavva/student-management-system
 ```
 
 ### 2. Open the project directory
 
 ```bash
-cd Student-Management-System-procedure-oriented
+cd student-management-system
 ```
 
 ### 3. Run the application

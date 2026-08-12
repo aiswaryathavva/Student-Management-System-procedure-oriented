@@ -1,2 +1,0 @@
-1,Rahul,20,maths,100
-2,uma,20,english,80
