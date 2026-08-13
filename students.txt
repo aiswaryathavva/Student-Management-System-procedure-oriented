@@ -1,0 +1,7 @@
+1,Rama,20,Maths,90
+2,Sita,30,English,98
+3,Lucky,20,Hindi,70
+4,madhu,20,science,70
+6,srinu,60,business,79
+15,Sneha,76,hindi,30
+10,deepthi,20,sap basis,100

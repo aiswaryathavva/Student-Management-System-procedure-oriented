@@ -1,4 +1,8 @@
-students=[]
+from StudentManager import StudentManager
+from utils import get_valid_age, get_valid_marks,get_non_empty_input
+from Student import Student
+manager = StudentManager()
+from file_handler import save_students
 def display_menu():
     print("========== Student Management ==========")
     print("1. Add Student")
@@ -7,99 +11,75 @@ def display_menu():
     print("4. Update Student")
     print("5. Delete Student")
     print("6. Save Students")
-    print("7.Exit")
-def add_student(student):
-    students.append(student)
-    print("Student added successfully.")
-def view_students(students):
-    if not students:
-        print("No students found.")
-    else:
-        print("-"*25)
-        for stu in students:
-            print_student(stu)
-            print()
-            print("-"*25)
-def search_student(student):    
-    if student is not None:
-            print("Student Found!!!")
-            print_student(student)
-    else:
-        print("Student not Found!!!")
-def update_student(student):
-    if student is not None:
-        print_student(student)
-        student["name"]=input("Enter student new name:")
-        student["age"]=int(input("Enter student new age:"))
-        student["course"]=input("Enter student new course:")
-        student["marks"]=int(input("Enter Student new marks:"))
-        print("Student updated successfully.")
-        print_student(student)
-    else:
-        print("Student not found.")
-def delete_student(student):
-    if student is not None:
-        students.remove(student)
-        print("The student is deleted successfully")
-    else:
-        print("Student not found.")
-def save_student(students):
-    with open('students.txt','w') as file:
-        for student in students:
-            line = ",".join(str(value) for value in student.values())
-            file.write(line + "\n")
-            # file.write(str(student)+"\n")
-    print("Students saved successfully")
+    print("7.Save and Exit")
+
+
 def get_user_choice():
-    choice = int(input("Enter your choice: "))
-    return choice
-def get_student():
-    student_details=dict()
-    student_details["id"]=input("Enter Student id:")
-    student_details["name"]=input("Enter student name:")
-    student_details["age"]=int(input("Enter student age:"))
-    student_details["course"]=input("Enter student course:")
-    student_details["marks"]=int(input("Enter Student marks:"))
-    return student_details
+    while True:
+        try:
+            choice = int(input("Enter your choice: "))
+            if 1 <= choice <= 7:
+                return choice
+            print("Please enter a choice between 1 and 7.")
+        except ValueError:
+            print("Please enter a valid integer.")
+def get_student(manager):
+    while True:
+        id = input("Enter Student id:")
+        if manager.find_student_by_id(id) is None:
+            break
+        print("The id exists already. Please enter a new id.")
+    name = get_non_empty_input("Enter student name: ", "Name")
+    age = get_valid_age("Enter student age: ")
+    course = get_non_empty_input("Enter student course: ", "Course")
+    marks = get_valid_marks("Enter student marks: ")
+    student=Student(id,name,age,course,marks)
+    return student
+def get_valid_age(message):
+    while True:
+        try:
+            age = int(input(message))
+            if age > 0:
+                return age
+            print("Enter a positive age.")
+        except ValueError:
+            print("Please enter a valid integer.")
+def get_valid_marks(message):
+    while True:
+        try:
+            marks = int(input(message))
+            if 0 <= marks <= 100:
+                return marks
+            print("Please enter marks between 0 and 100.")
+        except ValueError:
+            print("Please enter a valid integer.")
 def get_student_id():
     search_id=input("Enter student id: ")
     return search_id
 
-def print_student(student):
-    print(f"ID     : {student['id']}")
-    print(f"Name   : {student['name']}")
-    print(f"Age    : {student['age']}")
-    print(f"Course : {student['course']}")
-    print(f"Marks  : {student['marks']}")
-def find_student_by_id(students,student_id):
-    for stu in students:
-        if stu['id']==student_id:
-            return stu
-    
-    return None
+
 while(True):
     display_menu()
     choice=get_user_choice()
     if  choice == 1:
-        student=get_student()
-        add_student(student)    
+        student=get_student(manager)
+        manager.add_student(student)         
     elif choice == 2:
-        view_students(students)
+        manager.view_students()
     elif choice == 3:
-        student_id=get_student_id()
-        student=find_student_by_id(students,student_id)
-        search_student(student)
+        student_id=get_student_id()  
+        manager.search_student(student_id)
     elif choice == 4:
-        student_id=get_student_id()
-        student=find_student_by_id(students,student_id)
-        update_student(student)
+        student_id=get_student_id()    
+        manager.update_student(student_id)
     elif choice == 5:
-        student_id=get_student_id()
-        student=find_student_by_id(students,student_id)       
-        delete_student(student)
+        student_id=get_student_id()       
+        manager.delete_student(student_id)
     elif choice == 6:
-        save_student(students)
+        save_students(manager.students)
         print("The student data is saved in system")
     elif choice ==7:
+        save_students(manager.students)
+        print("Students saved successfully.")
         print("Thank you for using Student Management System.")
         break
